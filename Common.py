@@ -30,19 +30,19 @@ kLocalCloudFileName         = 'ExaktCloudDbV2.json'
 kLocalCloudTempFileName     = 'ExaktMinimalTemp.json'
 kLocalDevCloudTempFileName  = 'ExaktMinimalDevTemp.json'
 # Repo locations
-kExaktRepo                  = "ssh://git@core.linn.co.uk/home/git/exakt.git"
-kProductRepo                = "ssh://git@core.linn.co.uk/home/git/product.git"
-kReleaseUtilsRepo           = "ssh://git@core.linn.co.uk/home/git/releaseUtils.git"
-kOhDevToolsRepo             = "ssh://git@core.linn.co.uk/home/git/ohdevtools.git"
-kProductInfoRepo            = "ssh://git@core.linn.co.uk/home/git/ProductInfo.git"
-kDsRepo                     = "ssh://git@core.linn.co.uk/home/git/ds.git"
-kOhMediaPlayerRepo          = "ssh://git@core.linn.co.uk/home/git/ohMediaPlayer.git"
+kExaktRepo                  = "ssh://git@git.linn.co.uk/home/git/repos/exakt.git"
+kProductRepo                = "ssh://git@git.linn.co.uk/home/git/repos/product.git"
+kReleaseUtilsRepo           = "ssh://git@git.linn.co.uk/home/git/repos/releaseUtils.git"
+kOhDevToolsRepo             = "ssh://git@git.linn.co.uk/home/git/repos/ohdevtools.git"
+kProductInfoRepo            = "ssh://git@git.linn.co.uk/home/git/repos/ProductInfo.git"
+kDsRepo                     = "ssh://git@git.linn.co.uk/home/git/repos/ds.git"
+kOhMediaPlayerRepo          = "ssh://git@git.linn.co.uk/home/git/repos/ohMediaPlayer.git"
 # Misc
 kDateAndTime                = time.strftime('%d %b %Y %H:%M:%S', time.localtime())  # returns: 25 Aug 2014 15:38:11
 kProductSuppressedString    = 'DISABLED'
 kExaktSuppressedString      = 'suppress'
 # crash report related
-kTicketUrlBase              = "http://core.linn.co.uk/network/ticket/"
+kTicketUrlBase              = "http://trac.linn.co.uk/software/ticket/"
 kReportUrlBase              = "http://products.linn.co.uk/restricted/site/device/exception/"
 # Aws S3 - private
 kAwsBucketPrivate           = 'linn-artifacts-private'
@@ -52,8 +52,6 @@ kAwsElfBase                 = '/artifacts/builds/Volkano2'
 kElfFileFilter              = '*.elf'
 # Aws S3 - public
 kAwsBucketPublic            = 'linn-artifacts-public' # linn public, no customers
-#kAwsBucketCustomer          = 'linn-artifacts-firmware' # customer access, old style core1 zip firmware up to and including Davaar 104
-kAwsProductWebViewBase      = 'product/'
 
 
 
@@ -72,11 +70,16 @@ def Info( aMsg ):
     print( aMsg )
 
 
-def GetJsonObjects( aJsonFile ):
+def GetJsonObjects( aJsonFile, aRetainObjOrder=False ):
     f = open(aJsonFile, 'rt')
     data = f.read()
     f.close()
-    return json.loads(data)  # performs validation as well
+    if aRetainObjOrder:
+        from collections import OrderedDict
+        jsonObjs = json.loads(data, object_pairs_hook=OrderedDict ) # performs validation as well, retains object order on load
+    else:
+        jsonObjs = json.loads(data)  # performs validation as well
+    return jsonObjs
 
 
 def CreateJsonFile(aJsonObjs, aJsonFile, aSortKeys=True):
