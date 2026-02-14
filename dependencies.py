@@ -482,6 +482,7 @@ class DependencyCollection(object):
                     # substitute highest numbered number
                     del(d.expander.cache['archive-path'])
                     d.expander.env_dict['archive-path'] = self.substitute_latest(path)
+                    path = d.expander.expand('archive-path')
             if 'dest' in d.expander:
                 dest = d.expander.expand('dest')
             lookup = dest.rstrip( '/' ) + '/' + name
@@ -651,7 +652,13 @@ def fetch_dependencies(dependency_names=None, platform=None, env=None, fetch=Tru
     if 'platform' not in env:
         platform = env['platform'] = default_platform()
     if '-' in platform:
-        env['system'], env['architecture'] = platform.split('-', 2)
+        components = platform.split('-')
+        if len(components) == 2:
+            env['system'], env['architecture'] = components
+        elif len(components) == 3:
+            env['architecture'], env['distro'], env['system'] = components
+        else:
+            print("Unexpected platform format '%s'" % platform)
     if platform is None:
         raise Exception('Platform not specified and unable to guess.')
 

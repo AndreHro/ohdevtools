@@ -2,9 +2,11 @@
 import json
 import os
 import sys
+import time
 import requests
 import shutil
 
+kAwsBucketPublic    = 'linn-artifacts-public'
 kAwsBucketPrivate   = 'linn-artifacts-private'
 kAwsLinnCredsUri    = 'http://trac.linn.co.uk/software/raw-attachment/wiki/WikiStart/credentials'
 kAwsMetadataService = 'http://169.254.169.254/latest/meta-data/iam/info'
@@ -164,8 +166,8 @@ class __aws:
                 try:
                     timestamp = int(item['LastModified'].timestamp())
                 except:
-                    # handle obsolete python versions (but rsync method below now unreliable)
-                    timestamp = str(item['LastModified'])
+                    # handle obsolete python versions
+                    timestamp = time.mktime(time.strptime(item['modified'], '%Y-%m-%d %H:%M:%S+00:00'))
                 entries.append({'key': item['Key'], 'modified': timestamp, 'size': item['Size']})
         return entries
 
@@ -182,8 +184,8 @@ class __aws:
                 try:
                     timestamp = int(item['LastModified'].timestamp())
                 except:
-                    # handle obsolete python versions (but rsync method below now unreliable)
-                    timestamp = str(item['LastModified'])
+                    # handle obsolete python versions
+                    timestamp = time.mktime(time.strptime(item['modified'], '%Y-%m-%d %H:%M:%S+00:00'))
                 entries.append({'key': item['Key'], 'modified': timestamp, 'size': item['Size']})
         return entries
 

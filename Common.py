@@ -512,8 +512,8 @@ def CheckPublishTestDsEmulatorLocal( aVersion, aDryRun=False ):
 
 
 def CreateTestDsEmulator( aVersion, aCheckOnly, aLocalOnly, aDryRun ):
-    kEmulatorTypes = [ { "os": "Linux-x86",   "spotify": "spotify_embedded/lib/libspotify_embedded_shared.so" },
-                       { "os": "Windows-x86", "spotify": "spotify_embedded/lib/spotify_embedded_shared.dll" } ]  # Core-ppc32?
+    kEmulatorTypes = [ { "os": "Linux-x64",   "spotify": "spotify_embedded/lib/libspotify_embedded_shared.so" },
+                       { "os": "Windows-x86", "spotify": "spotify_embedded/lib/spotify_embedded_shared.dll" } ]
     jsonObjs = GetDependenciesJson( kProductRepo, aVersion )
     dsVer = spotifyVer = dsKey = spotifyKey = dsFile = spotifyFile = None
     versionId = aVersion.split('.')[1]
